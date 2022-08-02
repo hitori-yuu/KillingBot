@@ -9,17 +9,15 @@ module.exports = {
 	args: true,
 
 	async execute(message, args) {
-		const arg = args[0];
-
-        const wordsData = await wordsModel.findOne({ word: arg });
+        const wordsData = await wordsModel.findOne({ word: args });
         if (wordsData) {
-            await wordsModel.findOneAndRemove({ word: arg });
+            await wordsModel.findOneAndRemove({ word: args });
             message.channel.send({
-                content: `削除に成功したぞ: \`${arg}\``,
+                content: `削除に成功したぞ: \`${args}\``,
             });
         } else {
             message.channel.send({
-                content: `元から存在しないみたいだぜ: \`${arg}\``,
+                content: `元から存在しないみたいだぜ: \`${args}\``,
             });
         }
 	},

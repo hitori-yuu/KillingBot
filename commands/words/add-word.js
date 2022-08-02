@@ -9,21 +9,20 @@ module.exports = {
 	args: true,
 
 	async execute(message, args) {
-		const arg = args[0];
 
-        const wordsData = await wordsModel.findOne({ word: arg });
+        const wordsData = await wordsModel.findOne({ word: args });
         if (!wordsData) {
             const worddata = await wordsModel.create({
-                word: arg,
+                word: args,
                 author: message.author.tag
             });
             worddata.save();
             message.channel.send({
-                content: `登録に成功したぞ: \`${arg}\``,
+                content: `登録に成功したぞ: \`${args}\``,
             });
         } else {
             message.channel.send({
-                content: `すでに登録されているみたいだぞ: \`${arg}\``,
+                content: `すでに登録されているみたいだぞ: \`${args}\``,
             });
         }
 	},
