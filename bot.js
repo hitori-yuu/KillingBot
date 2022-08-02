@@ -9,12 +9,7 @@
 
 const fs = require("fs");
 const mongoose = require("mongoose");
-const {
-	Client,
-	Collection,
-	GatewayIntentBits,
-	Partials,
-} = require("discord.js");
+const { Client, Collection, GatewayIntentBits, Partials } = require("discord.js");
 const { REST } = require("@discordjs/rest");
 const { Routes } = require("discord-api-types/v10");
 require('dotenv').config()
@@ -26,14 +21,34 @@ require('dotenv').config()
 
 // @ts-ignore
 const client = new Client({
-	// Please add all intents you need, more detailed information @ https://ziad87.net/intents/
 	intents: [
 		GatewayIntentBits.Guilds,
-		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.GuildMembers,
+		GatewayIntentBits.GuildBans,
+		GatewayIntentBits.GuildEmojisAndStickers,
+		GatewayIntentBits.GuildIntegrations,
+		GatewayIntentBits.GuildWebhooks,
+		GatewayIntentBits.GuildInvites,
+		GatewayIntentBits.GuildVoiceStates,
+		GatewayIntentBits.GuildPresences,
 		GatewayIntentBits.GuildMessages,
+		GatewayIntentBits.GuildMessageReactions,
+		GatewayIntentBits.GuildMessageTyping,
+		GatewayIntentBits.DirectMessages,
+		GatewayIntentBits.DirectMessageReactions,
+		GatewayIntentBits.DirectMessageTyping,
 		GatewayIntentBits.MessageContent,
+		GatewayIntentBits.GuildScheduledEvents,
 	],
-	partials: [Partials.Channel],
+	partials: [
+		Partials.User,
+		Partials.Channel,
+		Partials.GuildMember,
+		Partials.Message,
+		Partials.Reaction,
+		Partials.GuildScheduledEvent,
+		Partials.ThreadMember,
+	],
 });
 
 mongoose
@@ -41,12 +56,11 @@ mongoose
 		useNewUrlParser: true,
 	})
 	.then(() => {
-		console.log('Database connection succeeded');
+		console.log('データベースに接続完了。');
 	})
 	.catch((error) => {
 		console.log(error);
 	});
-
 
 /**********************************************************************/
 // Below we will be making an event handler!
@@ -248,7 +262,7 @@ for (const module of selectMenus) {
 /**********************************************************************/
 // Registration of Slash-Commands in Discord API
 
-const rest = new REST({ version: "9" }).setToken(process.env.TOKEN);
+const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);
 
 const commandJsonData = [
 	...Array.from(client.slashCommands.values()).map((c) => c.data.toJSON()),
@@ -257,7 +271,7 @@ const commandJsonData = [
 
 (async () => {
 	try {
-		console.log("Started refreshing application (/) commands.");
+		console.log("アプリケーションコマンドのリフレッシュを開始しました。");
 
 		await rest.put(
 			/**
@@ -280,7 +294,7 @@ const commandJsonData = [
 			{ body: commandJsonData }
 		);
 
-		console.log("Successfully reloaded application (/) commands.");
+		console.log("アプリケーションのコマンドの再読み込みに成功しました。");
 	} catch (error) {
 		console.error(error);
 	}
