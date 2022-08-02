@@ -10,7 +10,7 @@ module.exports = {
 		client.user.setActivity({
 			name: '紫色が好きな18歳男子学生'
 		})
-		console.log(`Ready! Logged in as ${client.user.tag}`);
+		console.log(`ログイン完了: ${client.user.tag}`);
 
 		schedule.scheduleJob('*/30 * * * *', async function(){
 			const wordsData = await wordsModel.find();
