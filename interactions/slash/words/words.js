@@ -17,7 +17,7 @@ module.exports = {
             });
 
             await interaction.reply({
-                content: `俺は以下の **${wordsData.length}個** の言葉を気まぐれに呟くぜ。\n\`\`\`${words.join("\n- ")}\`\`\``,
+                content: `俺は以下の **${wordsData.length}個** の言葉を気まぐれに呟くぜ。\n\`\`\`- ${words.join("\n- ")}\`\`\``,
             });
 
         } else {
