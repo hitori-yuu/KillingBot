@@ -271,7 +271,7 @@ const commandJsonData = [
 
 (async () => {
 	try {
-		console.log("アプリケーションコマンドのリフレッシュを開始しました。");
+		console.log("アプリケーションコマンドの再読み込みを開始しました。");
 
 		await rest.put(
 			/**
