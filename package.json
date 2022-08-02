@@ -39,6 +39,9 @@
 	"dependencies": {
 		"@discordjs/rest": "^1.0.0",
 		"discord-api-types": "^0.36.2",
-		"discord.js": "^14.0.2"
+		"discord.js": "^14.0.2",
+		"dotenv": "^16.0.1",
+		"mongoose": "^6.5.0",
+		"node-schedule": "^2.1.0"
 	}
 }

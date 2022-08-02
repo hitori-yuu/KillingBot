@@ -44,7 +44,7 @@ module.exports = {
 					// On validation, reply back.
 
 					message.reply({
-						content: "俺のすべてをお前のDMに送信した。",
+						content: "俺のすべてをDMに送信したぞ。",
 					});
 				})
 				.catch((error) => {
