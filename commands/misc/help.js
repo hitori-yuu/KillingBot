@@ -1,27 +1,14 @@
-/**
- * @file Dynamic help command
- * @author Naman Vrati
- * @since 1.0.0
- * @version 3.3.0
- */
-
-// Deconstructing prefix from config file to use in help command
-const { prefix } = require("./../../config.json");
-
-// Deconstructing EmbedBuilder to create embeds within this command
+require('dotenv').config()
 const { EmbedBuilder, ChannelType } = require("discord.js");
 
-/**
- * @type {import('../../typings').LegacyCommand}
- */
 module.exports = {
 	name: "help",
-	description: "List all commands of bot or info about a specific command.",
+	description: "俺の全コマンド、もしくは特定のコマンドに関する情報を一覧表示するぜ",
 	aliases: ["commands"],
-	usage: "[command name]",
-	cooldown: 5,
+	usage: "[コマンドの名前]",
+	cooldown: 2,
 
-	execute(message, args) {
+	async execute(message, args) {
 		const { commands } = message.client;
 
 		// If there are no args, it means it needs whole help command.
@@ -33,16 +20,16 @@ module.exports = {
 			 */
 
 			let helpEmbed = new EmbedBuilder()
-				.setColor("Random")
-				.setTitle("List of all my commands")
+				.setColor("#4a488e")
+				.setTitle("全コマンドの一覧")
 				.setDescription(
 					"`" + commands.map((command) => command.name).join("`, `") + "`"
 				)
 
 				.addFields([
 					{
-						name: "Usage",
-						value: `\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`,
+						name: "使用方法",
+						value: `\nコマンドを入力するときは、 \`help [コマンド名]\` と入力するとコマンドの情報が表示されるぜ。`,
 					},
 				]);
 
@@ -57,18 +44,18 @@ module.exports = {
 					// On validation, reply back.
 
 					message.reply({
-						content: "I've sent you a DM with all my commands!",
+						content: "俺のすべてをお前のDMに送信した。",
 					});
 				})
 				.catch((error) => {
 					// On failing, throw error.
 
 					console.error(
-						`Could not send help DM to ${message.author.tag}.\n`,
+						`ヘルプDMを ${message.author.tag} に送れませんでした。\n`,
 						error
 					);
 
-					message.reply({ content: "It seems like I can't DM you!" });
+					message.reply({ content: "なぜだ？！貴様にDMが送れないぞ！" });
 				});
 		}
 
@@ -88,7 +75,7 @@ module.exports = {
 		// If it's an invalid command.
 
 		if (!command) {
-			return message.reply({ content: "That's not a valid command!" });
+			return message.reply({ content: "有効なコマンドじゃないぜ、確認してくれ。" });
 		}
 
 		/**
@@ -97,8 +84,8 @@ module.exports = {
 		 */
 
 		let commandEmbed = new EmbedBuilder()
-			.setColor("Random")
-			.setTitle("Command Help");
+			.setColor("#4a488e")
+			.setTitle("コマンドヘルプ");
 
 		if (command.description)
 			commandEmbed.setDescription(`${command.description}`);
@@ -106,21 +93,21 @@ module.exports = {
 		if (command.aliases)
 			commandEmbed.addFields([
 				{
-					name: "Aliases",
+					name: "別名",
 					value: `\`${command.aliases.join(", ")}\``,
 					inline: true,
 				},
 				{
-					name: "Cooldown",
-					value: `${command.cooldown || 3} second(s)`,
+					name: "クールダウン",
+					value: `${command.cooldown || 3} 秒`,
 					inline: true,
 				},
 			]);
 		if (command.usage)
 			commandEmbed.addFields([
 				{
-					name: "Usage",
-					value: `\`${prefix}${command.name} ${command.usage}\``,
+					name: "使用方法",
+					value: `\`${process.env.PREFIX}${command.name} ${command.usage}\``,
 					inline: true,
 				},
 			]);

@@ -1,10 +1,4 @@
-/**
- * @file Default Bot Mention Command
- * @author Naman Vrati
- * @since 3.0.0
- */
-
-const { prefix } = require("../config.json");
+require('dotenv').config()
 
 module.exports = {
 	/**
@@ -15,7 +9,7 @@ module.exports = {
 
 	async execute(message) {
 		return message.channel.send(
-			`Hi ${message.author}! My prefix is \`${prefix}\`, get help by \`${prefix}help\``
+			`Hi ${message.author}! My prefix is \`${process.env.PREFIX}\`, get help by \`${process.env.PREFIX}help\``
 		);
 	},
 };

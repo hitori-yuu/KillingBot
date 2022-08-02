@@ -1,19 +1,29 @@
-/**
- * @file Ready Event File.
- * @author Naman Vrati
- * @since 1.0.0
- * @version 3.2.2
- */
+const wordsModel = require('../models/wordsSchema');
+const channelsModel = require('../models/channelsSchema');
+
+const schedule = require('node-schedule');
 
 module.exports = {
 	name: "ready",
-	once: true,
 
-	/**
-	 * @description Executes when client is ready (bot initialization).
-	 * @param {import('../typings').Client} client Main Application Client.
-	 */
-	execute(client) {
+	async execute(client) {
+		client.user.setActivity({
+			name: '紫色が好きな18歳男子学生'
+		})
 		console.log(`Ready! Logged in as ${client.user.tag}`);
+
+		schedule.scheduleJob('*/30 * * * *', async function(){
+			const wordsData = await wordsModel.find();
+			const channelsData = await channelsModel.find();
+			var words = [];
+			wordsData.forEach(function(word) {
+				words.push([word.word])
+			});
+			const word = words[Math.floor(Math.random() * (wordsData.length -1 - 0) + 0)].toString();
+
+			channelsData.forEach(function(channel) {
+				client.channels.cache.get(channel.id).send(word);
+			})
+		});
 	},
 };

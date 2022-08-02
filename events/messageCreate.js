@@ -8,7 +8,7 @@
 // Declares constants (destructured) to be used in this file.
 
 const { Collection, ChannelType } = require("discord.js");
-const { prefix, owner } = require("../config.json");
+require('dotenv').config()
 
 // Prefix regex, we will use to match in mention prefix.
 
@@ -46,7 +46,7 @@ module.exports = {
 		 * @type {String}
 		 */
 
-		const checkPrefix = prefix.toLowerCase();
+		const checkPrefix = process.env.PREFIX.toLowerCase();
 
 		/**
 		 * @description Regex expression for mention prefix
@@ -71,7 +71,7 @@ module.exports = {
 		 * @description The Message Content of the received message seperated by spaces (' ') in an array, this excludes prefix and command/alias itself.
 		 */
 
-		const args = content.slice(matchedPrefix.length).trim().split(/ +/);
+		const args = content.slice(matchedPrefix.length).trim().split(/\s+/);
 
 		/**
 		 * @type {String}
@@ -97,7 +97,7 @@ module.exports = {
 
 		// Owner Only Property, add in your command properties if true.
 
-		if (command.ownerOnly && message.author.id !== owner) {
+		if (command.ownerOnly && message.author.id !== process.env.OWNER) {
 			return message.reply({ content: "This is a owner only command!" });
 		}
 
@@ -125,7 +125,7 @@ module.exports = {
 			let reply = `You didn't provide any arguments, ${message.author}!`;
 
 			if (command.usage) {
-				reply += `\nThe proper usage would be: \`${prefix}${command.name} ${command.usage}\``;
+				reply += `\nThe proper usage would be: \`${process.env.PREFIX}${command.name} ${command.usage}\``;
 			}
 
 			return message.channel.send({ content: reply });
