@@ -172,6 +172,7 @@ module.exports = {
 			if (ch_dm == true) ch_name = ch_id = 'None'
 
             const logData = await logsModel.create({
+				type: 'NORMAL_COMMAND',
 				command: command.name,
 				args: args || 'None',
 				executer: {

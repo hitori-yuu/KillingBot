@@ -281,7 +281,7 @@ const commandJsonData = [
 			 * 2. Please comment the below (uncommented) line (for guild commands).
 			 */
 
-			Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID),
+			Routes.applicationCommands(process.env.CLIENT_ID),
 
 			/**
 			 * Good advice for global commands, you need to execute them only once to update

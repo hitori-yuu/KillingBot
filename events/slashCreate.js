@@ -1,3 +1,6 @@
+const { ChannelType } = require("discord.js");
+const logsModel = require('../models/logsSchema');
+
 module.exports = {
 	name: "interactionCreate",
 
@@ -34,6 +37,7 @@ module.exports = {
 			if (ch_dm == true) ch_name = ch_id = 'None'
 
             const logData = await logsModel.create({
+				type: 'SLASH_COMMAND',
 				command: interaction.commandName,
 				args: 'Unknown',
 				executer: {
@@ -45,7 +49,7 @@ module.exports = {
 					id: ch_id,
 					dm: ch_dm,
 				},
-				date: now.toLocaleString({ timeZone: 'Asia/Tokyo' }),
+				date: new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }),
             });
             logData.save();
 		} catch (err) {

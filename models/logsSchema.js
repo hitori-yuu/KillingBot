@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const logsSchema = new mongoose.Schema({
+    type: { type: String },
     command: { type: String },
     args: { type: Array },
     executer: {
