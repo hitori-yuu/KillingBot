@@ -9,7 +9,7 @@ module.exports = {
 
 	async execute(message) {
 		return message.channel.send(
-			`Hi ${message.author}! My prefix is \`${process.env.PREFIX}\`, get help by \`${process.env.PREFIX}help\``
+			`おう、今のプレフィックス（接頭辞）は \`${process.env.PREFIX}\` だぜ。ヘルプは \`${process.env.PREFIX}help\` で見れるぞ。`
 		);
 	},
 };

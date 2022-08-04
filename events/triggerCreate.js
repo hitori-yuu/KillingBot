@@ -51,7 +51,7 @@ module.exports = {
 						console.error(error);
 
 						message.reply({
-							content: "there was an error trying to execute that trigger!",
+							content: "エラーが発生したぞ？！",
 						});
 					}
 

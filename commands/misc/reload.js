@@ -9,10 +9,6 @@ module.exports = {
 	ownerOnly: true,
 
 	async execute(message, args) {
-		/**
-		 * @type {String}
-		 * @description Name of the specifiied command in lowercase.
-		 */
 
 		const commandName = args[0].toLowerCase();
 
@@ -22,24 +18,13 @@ module.exports = {
 				(cmd) => cmd.aliases && cmd.aliases.includes(commandName)
 			);
 
-		// Command returns if there is no such command with the specific command name or alias.
 		if (!command) {
 			return message.channel.send({
 				content: `There is no command with name or alias \`${commandName}\`, ${message.author}!`,
 			});
 		}
 
-		/**
-		 * @type {String[]}
-		 * @description Array of all command categories aka folders.
-		 */
-
 		const commandFolders = fs.readdirSync("./commands");
-
-		/**
-		 * @type {String}
-		 * @description Name of the command category/folder of the specified command.
-		 */
 
 		const folderName = commandFolders.find((folder) =>
 			fs.readdirSync(`./commands/${folder}`).includes(`${command.name}.js`)

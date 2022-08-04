@@ -1,7 +1,7 @@
 module.exports = {
 	name: "invite",
 	description: "俺の招待リンクを表示するぜ",
-    cooldown: 2,
+    cooldown: 10,
 
 	async execute(message, args) {
         message.channel.send({

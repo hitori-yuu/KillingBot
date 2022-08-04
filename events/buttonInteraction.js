@@ -44,7 +44,7 @@ module.exports = {
 		} catch (err) {
 			console.error(err);
 			await interaction.reply({
-				content: "There was an issue while executing that button!",
+				content: "エラーが発生したぞ？！",
 				ephemeral: true,
 			});
 			return;

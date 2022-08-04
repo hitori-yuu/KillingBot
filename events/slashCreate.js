@@ -25,10 +25,33 @@ module.exports = {
 
 		try {
 			await command.execute(interaction);
+
+			var ch_name = interaction.channel.name
+			var ch_id = interaction.channel.id
+			var ch_dm = false
+
+			if (interaction.channel.type === ChannelType.DM) ch_dm = true;
+			if (ch_dm == true) ch_name = ch_id = 'None'
+
+            const logData = await logsModel.create({
+				command: interaction.commandName,
+				args: 'Unknown',
+				executer: {
+					name: interaction.user.username,
+					id:  interaction.user.id,
+				},
+				locate: {
+					name: ch_name,
+					id: ch_id,
+					dm: ch_dm,
+				},
+				date: now.toLocaleString({ timeZone: 'Asia/Tokyo' }),
+            });
+            logData.save();
 		} catch (err) {
 			console.error(err);
 			await interaction.reply({
-				content: "There was an issue while executing that command!",
+				content: "エラーが発生したぞ？！",
 				ephemeral: true,
 			});
 		}

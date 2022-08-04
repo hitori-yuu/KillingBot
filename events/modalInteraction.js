@@ -42,7 +42,7 @@ module.exports = {
 		} catch (err) {
 			console.error(err);
 			await interaction.reply({
-				content: "There was an issue while understanding this modal!",
+				content: "エラーが発生したぞ？！",
 				ephemeral: true,
 			});
 			return;

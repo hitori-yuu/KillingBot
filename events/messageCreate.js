@@ -9,6 +9,7 @@
 
 const { Collection, ChannelType } = require("discord.js");
 require('dotenv').config()
+const logsModel = require('../models/logsSchema');
 
 // Prefix regex, we will use to match in mention prefix.
 
@@ -98,14 +99,14 @@ module.exports = {
 		// Owner Only Property, add in your command properties if true.
 
 		if (command.ownerOnly && message.author.id !== process.env.OWNER) {
-			return message.reply({ content: "This is a owner only command!" });
+			return message.reply({ content: "そのコマンドはオーナー専用だぜ。" });
 		}
 
 		// Guild Only Property, add in your command properties if true.
 
 		if (command.guildOnly && message.channel.type === ChannelType.DM) {
 			return message.reply({
-				content: "I can't execute that command inside DMs!",
+				content: "そのコマンドはDMじゃあ実行できないぜ。",
 			});
 		}
 
@@ -115,17 +116,17 @@ module.exports = {
 		if (command.permissions && message.channel.type !== ChannelType.DM) {
 			const authorPerms = message.channel.permissionsFor(message.author);
 			if (!authorPerms || !authorPerms.has(command.permissions)) {
-				return message.reply({ content: "You can not do this!" });
+				return message.reply({ content: "君はこのコマンドを実行する権限がないみたいなんだ、ドンマイ。" });
 			}
 		}
 
 		// Args missing
 
 		if (command.args && !args.length) {
-			let reply = `You didn't provide any arguments, ${message.author}!`;
+			let reply = `引数がないみたいだぜ、確認してくれ。`;
 
 			if (command.usage) {
-				reply += `\nThe proper usage would be: \`${process.env.PREFIX}${command.name} ${command.usage}\``;
+				reply += `\n使用方法が違うみたいだ。\n使用方法: \`${process.env.PREFIX}${command.name} ${command.usage}\``;
 			}
 
 			return message.channel.send({ content: reply });
@@ -139,7 +140,7 @@ module.exports = {
 			cooldowns.set(command.name, new Collection());
 		}
 
-		const now = Date.now();
+		const now = new Date();
 		const timestamps = cooldowns.get(command.name);
 		const cooldownAmount = (command.cooldown || 3) * 1000;
 
@@ -149,9 +150,7 @@ module.exports = {
 			if (now < expirationTime) {
 				const timeLeft = (expirationTime - now) / 1000;
 				return message.reply({
-					content: `please wait ${timeLeft.toFixed(
-						1
-					)} more second(s) before reusing the \`${command.name}\` command.`,
+					content: `ちょっとまってくれ、\`${command.name}\` を実行するにはあと **${timeLeft.toFixed(1)}秒** 待ってくれ。`,
 				});
 			}
 		}
@@ -164,10 +163,33 @@ module.exports = {
 		// execute the final command. Put everything above this.
 		try {
 			command.execute(message, args);
+
+			var ch_name = message.channel.name
+			var ch_id = message.channel.id
+			var ch_dm = false
+
+			if (message.channel.type === ChannelType.DM) ch_dm = true;
+			if (ch_dm == true) ch_name = ch_id = 'None'
+
+            const logData = await logsModel.create({
+				command: command.name,
+				args: args || 'None',
+				executer: {
+					name: message.author.username,
+					id: message.author.id,
+				},
+				locate: {
+					name: ch_name,
+					id: ch_id,
+					dm: ch_dm,
+				},
+				date: now.toLocaleString({ timeZone: 'Asia/Tokyo' }),
+            });
+            logData.save();
 		} catch (error) {
 			console.error(error);
 			message.reply({
-				content: "There was an error trying to execute that command!",
+				content: "エラーが発生したぞ？！",
 			});
 		}
 	},

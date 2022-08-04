@@ -11,14 +11,7 @@ module.exports = {
 	async execute(message, args) {
 		const { commands } = message.client;
 
-		// If there are no args, it means it needs whole help command.
-
 		if (!args.length) {
-			/**
-			 * @type {EmbedBuilder}
-			 * @description Help command embed object
-			 */
-
 			let helpEmbed = new EmbedBuilder()
 				.setColor("#4a488e")
 				.setTitle("全コマンドの一覧")
@@ -33,22 +26,17 @@ module.exports = {
 					},
 				]);
 
-			// Attempts to send embed in DMs.
-
 			return message.author
 				.send({ embeds: [helpEmbed] })
 
 				.then(() => {
 					if (message.channel.type === ChannelType.DM) return;
 
-					// On validation, reply back.
-
 					message.reply({
 						content: "俺のすべてをDMに送信したぞ。",
 					});
 				})
 				.catch((error) => {
-					// On failing, throw error.
 
 					console.error(
 						`ヘルプDMを ${message.author.tag} に送れませんでした。\n`,
@@ -59,29 +47,15 @@ module.exports = {
 				});
 		}
 
-		// If argument is provided, check if it's a command.
-
-		/**
-		 * @type {String}
-		 * @description First argument in lower case
-		 */
-
 		const name = args[0].toLowerCase();
 
 		const command =
 			commands.get(name) ||
 			commands.find((c) => c.aliases && c.aliases.includes(name));
 
-		// If it's an invalid command.
-
 		if (!command) {
 			return message.reply({ content: "有効なコマンドじゃないぜ、確認してくれ。" });
 		}
-
-		/**
-		 * @type {EmbedBuilder}
-		 * @description Embed of Help command for a specific command.
-		 */
 
 		let commandEmbed = new EmbedBuilder()
 			.setColor("#4a488e")
@@ -111,8 +85,6 @@ module.exports = {
 					inline: true,
 				},
 			]);
-
-		// Finally send the embed.
 
 		message.channel.send({ embeds: [commandEmbed] });
 	},
