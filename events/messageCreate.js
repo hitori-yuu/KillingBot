@@ -7,9 +7,10 @@
 
 // Declares constants (destructured) to be used in this file.
 
-const { Collection, ChannelType } = require("discord.js");
+const { Collection, ChannelType, EmbedBuilder } = require("discord.js");
 require('dotenv').config()
 const logsModel = require('../models/logsSchema');
+const logschannelsModel = require('../models/logschannelsSchema');
 
 // Prefix regex, we will use to match in mention prefix.
 
@@ -98,7 +99,7 @@ module.exports = {
 
 		// Owner Only Property, add in your command properties if true.
 
-		if (command.ownerOnly && message.author.id !== process.env.OWNER) {
+		if (command.ownerOnly && message.author.id !== process.env.OWNER.toString() && process.env.OWNER_2.toString()) {
 			return message.reply({ content: "そのコマンドはオーナー専用だぜ。" });
 		}
 
@@ -158,9 +159,6 @@ module.exports = {
 		timestamps.set(message.author.id, now);
 		setTimeout(() => timestamps.delete(message.author.id), cooldownAmount);
 
-		// Rest your creativity is below.
-
-		// execute the final command. Put everything above this.
 		try {
 			command.execute(message, args);
 
@@ -187,6 +185,28 @@ module.exports = {
 				date: now.toLocaleString({ timeZone: 'Asia/Tokyo' }),
             });
             logData.save();
+
+
+			var ch = `${message.channel.name}(${message.channel.id})`
+			if (ch_dm == true) ch = 'DM';
+
+			const logEmbed = new EmbedBuilder()
+			.setColor("#4a488e")
+			.setTitle("コマンドログ")
+			.setThumbnail(message.author.displayAvatarURL({extension: "png", size: 4096}))
+			.addFields(
+				{ name: 'コマンドの種類', value: 'NORMAL_COMMAND' },
+				{ name: 'コマンドの名前', value: command.name },
+				{ name: 'コマンドの引数', value: args.join(', ').toString() || 'None' },
+				{ name: 'コマンドの実行者', value: `${message.author.username}(${message.author.id})` },
+				{ name: 'コマンドの実行場所', value: ch },
+				{ name: 'コマンドの実行日時', value: now.toLocaleString({ timeZone: 'Asia/Tokyo' }) },
+			);
+			const channelsData = await logschannelsModel.find();
+			channelsData.forEach(function(channel) {
+				client.channels.cache.get(channel.id).send({embeds: [logEmbed]});
+			});
+
 		} catch (error) {
 			console.error(error);
 			message.reply({

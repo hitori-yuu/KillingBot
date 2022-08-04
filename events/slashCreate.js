@@ -1,5 +1,6 @@
-const { ChannelType } = require("discord.js");
+const { ChannelType, EmbedBuilder, ApplicationCommandOptionBase } = require("discord.js");
 const logsModel = require('../models/logsSchema');
+const logschannelsModel = require('../models/logschannelsSchema');
 
 module.exports = {
 	name: "interactionCreate",
@@ -36,10 +37,14 @@ module.exports = {
 			if (interaction.channel.type === ChannelType.DM) ch_dm = true;
 			if (ch_dm == true) ch_name = ch_id = 'None'
 
+
+			var options = 'None';
+			if (interaction.options.data[0]) options = `[${interaction.options.data[0].name}] ${interaction.options.data[0].value}`;
+
             const logData = await logsModel.create({
 				type: 'SLASH_COMMAND',
 				command: interaction.commandName,
-				args: 'Unknown',
+				args: options,
 				executer: {
 					name: interaction.user.username,
 					id:  interaction.user.id,
@@ -52,6 +57,30 @@ module.exports = {
 				date: new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }),
             });
             logData.save();
+
+
+			var ch = `${interaction.channel.name}(${interaction.channel.id})`
+			if (ch_dm == true) ch = 'DM';
+
+			const logEmbed = new EmbedBuilder()
+			.setColor("#4a488e")
+			.setTitle("コマンドログ")
+			.setThumbnail(interaction.user.displayAvatarURL({extension: "png", size: 4096}))
+			.addFields(
+				{ name: 'コマンドの種類', value: 'SLASH_COMMAND' },
+				{ name: 'コマンドの名前', value: interaction.commandName },
+				{ name: 'コマンドの引数', value: options },
+				{ name: 'コマンドの実行者', value: `${interaction.user.username}(${interaction.user.id})` },
+				{ name: 'コマンドの実行場所', value: ch },
+				{ name: 'コマンドの実行日時', value: new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }) },
+			);
+			const channelsData = await logschannelsModel.find();
+			channelsData.forEach(function(channel) {
+				client.channels.cache.get(channel.id).send({embeds: [logEmbed]});
+			});
+
+			console.log();
+
 		} catch (err) {
 			console.error(err);
 			await interaction.reply({
