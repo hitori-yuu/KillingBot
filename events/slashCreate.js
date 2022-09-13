@@ -63,23 +63,21 @@ module.exports = {
 			if (ch_dm == true) ch = 'DM';
 
 			const logEmbed = new EmbedBuilder()
-			.setColor("#4a488e")
-			.setTitle("コマンドログ")
-			.setThumbnail(interaction.user.displayAvatarURL({extension: "png", size: 4096}))
-			.addFields(
-				{ name: 'コマンドの種類', value: 'SLASH_COMMAND' },
-				{ name: 'コマンドの名前', value: interaction.commandName },
-				{ name: 'コマンドの引数', value: options },
-				{ name: 'コマンドの実行者', value: `${interaction.user.username}(${interaction.user.id})` },
-				{ name: 'コマンドの実行場所', value: ch },
-				{ name: 'コマンドの実行日時', value: new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }) },
-			);
+				.setColor("#4a488e")
+				.setTitle("コマンドログ")
+				.setThumbnail(interaction.user.displayAvatarURL({extension: "png", size: 4096}))
+				.addFields(
+					{ name: 'コマンドの種類', value: 'SLASH_COMMAND' },
+					{ name: 'コマンドの名前', value: interaction.commandName },
+					{ name: 'コマンドの引数', value: options },
+					{ name: 'コマンドの実行者', value: `${interaction.user.username}(${interaction.user.id})` },
+					{ name: 'コマンドの実行場所', value: ch },
+					{ name: 'コマンドの実行日時', value: new Date().toLocaleString({ timeZone: 'Asia/Tokyo' }) },
+				);
 			const channelsData = await logschannelsModel.find();
 			channelsData.forEach(function(channel) {
 				client.channels.cache.get(channel.id).send({embeds: [logEmbed]});
 			});
-
-			console.log();
 
 		} catch (err) {
 			console.error(err);
