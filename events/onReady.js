@@ -12,7 +12,7 @@ module.exports = {
 		})
 		console.log(`ログイン完了: ${client.user.tag}`);
 
-		schedule.scheduleJob('0 */2 * * *', async function(){
+		schedule.scheduleJob('*/1 * * * *', async function(){
 			const wordsData = await wordsModel.find();
 			const channelsData = await channelsModel.find();
 			var words = [];
