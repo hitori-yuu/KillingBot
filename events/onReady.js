@@ -1,29 +1,26 @@
-const wordsModel = require('../models/wordsSchema');
-const channelsModel = require('../models/channelsSchema');
+const wordsModel = require("../models/wordsSchema");
+const channelsModel = require("../models/channelsSchema");
 
-const schedule = require('node-schedule');
+const schedule = require("node-schedule");
 
 module.exports = {
 	name: "ready",
 
 	async execute(client) {
 		client.user.setActivity({
-			name: '紫色が好きな18歳男子学生'
-		})
+			name: "紫色が好きな18歳男子学生",
+		});
 		console.log(`ログイン完了: ${client.user.tag}`);
 
-		schedule.scheduleJob('* * */1 * *', async function(){
+		schedule.scheduleJob("0 7 * * *", async function () {
 			const wordsData = await wordsModel.find();
 			const channelsData = await channelsModel.find();
-			var words = [];
-			wordsData.forEach(function(word) {
-				words.push([word.word])
-			});
-			const word = words[Math.floor(Math.random() * (wordsData.length -1 - 0) + 0)].toString();
+			const words = wordsData.map((word) => word.word);
+			const word = words[Math.floor(Math.random() * words.length)];
 
-			channelsData.forEach(function(channel) {
-				client.channels.cache.get(channel.id).send(word);
-			})
+			channelsData.forEach((channel) => {
+				client.channels.cache.get(channel.id)?.send(word);
+			});
 		});
 	},
 };
