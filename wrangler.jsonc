@@ -1,4 +1,7 @@
 {
 	"name": "killingbot",
-	"compatibility_date": "2025-08-29"
+	"compatibility_date": "2025-08-29",
+	"assets": {
+		"directory": "./dist"
+	}
 }
